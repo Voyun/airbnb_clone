@@ -79,7 +79,9 @@ class Room(core_models.TimeStampedModel):
     check_in = models.TimeField()
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
-    host = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    host = models.ForeignKey(
+        "users.User", related_name="rooms", on_delete=models.CASCADE
+    )
     room_type = models.ForeignKey("RoomType", on_delete=models.SET_NULL, null=True)
     amenities = models.ManyToManyField("Amenity", blank=True)
     facilities = models.ManyToManyField("Facility", blank=True)
@@ -87,3 +89,10 @@ class Room(core_models.TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def total_rating(self):
+        all_reviews = self.reviews.all()
+        all_ratings = 0
+        for review in all_reviews:
+            all_ratings += review.rating_average()
+        return all_ratings / len(all_reviews)
