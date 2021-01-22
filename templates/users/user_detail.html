@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block page_name %}
+    {{user_obj.first_name}}'s Profile
+{% endblock page_name %}
+
+{% block search-bar %}
+{% endblock search-bar %}
+
+{% block content %}
+    
+    
+    {% if user_obj.avatar %}
+        <img src="{{user_obj.avatar.url}}" />
+    {% else %}
+        <div class="h-20 w-20 bg-gray-700 rounded-full text-white flex justify-center items-center">
+            <span class="text-lg">{{user_obj.last_name|first}}</span>
+        </div>
+    {% endif %}
+        
+
+    {{user_obj.first_name}}
+
+    {{user.bio}}
+
+
+    
+    {% if user == user_obj %}
+        <a href="{% url 'users:update' %}" class="btn">Edit Profile</a>
+    {% endif %}
+        
+    
+    {% if user_obj.rooms.count > 0 %}
+        <div>
+            <h3>{{user_obj.first_name}}'s Rooms</h3>
+            <div>
+                {% for room in user_obj.rooms.all %}
+                    {{room.name}}
+                {% endfor %}
+            </div>
+        </div> 
+    {% endif %}
+        
+    
+
+{% endblock content %}
